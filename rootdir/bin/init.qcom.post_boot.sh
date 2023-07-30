@@ -4740,7 +4740,7 @@ esac
 case "$target" in
     "msmnile")
 	# Core control parameters for gold
-	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
+	echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
 	echo 30 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
@@ -4748,10 +4748,10 @@ case "$target" in
 
 	# Core control parameters for gold+
 	echo 0 > /sys/devices/system/cpu/cpu7/core_ctl/min_cpus
-	echo 60 > /sys/devices/system/cpu/cpu7/core_ctl/busy_up_thres
-	echo 30 > /sys/devices/system/cpu/cpu7/core_ctl/busy_down_thres
+	echo 90 > /sys/devices/system/cpu/cpu7/core_ctl/busy_up_thres
+	echo 70 > /sys/devices/system/cpu/cpu7/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu7/core_ctl/offline_delay_ms
-	echo 1 > /sys/devices/system/cpu/cpu7/core_ctl/task_thres
+	echo 3 > /sys/devices/system/cpu/cpu7/core_ctl/task_thres
 	# Controls how many more tasks should be eligible to run on gold CPUs
 	# w.r.t number of gold CPUs available to trigger assist (max number of
 	# tasks eligible to run on previous cluster minus number of CPUs in
@@ -4785,23 +4785,24 @@ case "$target" in
 	# configure governor settings for silver cluster
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us
-        echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
+        echo 50000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 1209600 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
+	echo 1 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/iowait_boost_enable
 	echo 576000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/pl
 
 	# configure governor settings for gold cluster
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/up_rate_limit_us
-        echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
+        echo 30000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 1612800 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/pl
 
 	# configure governor settings for gold+ cluster
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
-	echo 0 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/up_rate_limit_us
+	echo 50000 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/up_rate_limit_us
         echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
-	echo 1612800 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
+     	echo 1612800 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/pl
 
 	# configure input boost settings
@@ -4876,16 +4877,6 @@ case "$target" in
 
         # disable GPU throttling
         echo 0 > /sys/class/kgsl/kgsl-3d0/throttling
-
-        # tune schedtune
-        echo 5 > /dev/stune/schedtune.boost
-        echo 1 > /dev/stune/schedtune.sched_boost_no_override
-
-        echo 5 > /dev/stune/top-app/schedtune.boost
-        echo 1 > /dev/stune/top-app/schedtune.sched_boost_no_override
-
-        echo 4 > /dev/stune/foreground/schedtune.boost
-        echo 1 > /dev/stune/foreground/schedtune.sched_boost_no_override
 
     # memlat specific settings are moved to seperate file under
     # device/target specific folder
@@ -5626,6 +5617,8 @@ case "$target" in
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
     "msm8909" | "msm8916" | "msm8937" | "msm8952" | "msm8953" | "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm710" | "msmnile" | "msmsteppe" | "sm6150" | "kona" | "lito" | "trinket" | "atoll" | "bengal" | "sdmshrike")
+        # disable GPU throttling
+        echo 0 > /sys/class/kgsl/kgsl-3d0/throttling
         setprop vendor.post_boot.parsed 1
     ;;
     "apq8084")
