@@ -4741,7 +4741,7 @@ case "$target" in
     "msmnile")
 	# Core control parameters for gold
 	echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
-	echo 70 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
+	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
 	echo 30 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
 	echo 5 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
@@ -4764,6 +4764,10 @@ case "$target" in
 
 	# Disable Core control on silver
 	echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/enable
+
+	# STUNE
+	echo 12 > /dev/stune/top-app/schedtune.boost
+    echo 1 > /dev/stune/top-app/schedtune.sched_boost_no_override
 
 	# Setting b.L scheduler parameters
 	echo 95 95 > /proc/sys/kernel/sched_upmigrate
@@ -4806,9 +4810,9 @@ case "$target" in
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/pl
 
 	# configure input boost settings
-	echo "0:1305600" > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
-        echo "0:1785600 1:0 2:0 3:0 4:2419200 5:0 6:0 7:0" > /sys/module/cpu_boost/parameters/powerkey_input_boost_freq
+        echo "0:1785600 1:0 2:0 3:0 4:0 5:0 6:0 7:0" > /sys/module/cpu_boost/parameters/powerkey_input_boost_freq
         echo 400 > /sys/module/cpu_boost/parameters/powerkey_input_boost_ms
 
 	# Disable wsf, beacause we are using efk.
