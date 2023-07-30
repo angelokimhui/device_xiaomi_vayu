@@ -4776,7 +4776,7 @@ case "$target" in
 	echo 0-2     > /dev/cpuset/background/cpus
 	echo 0-3     > /dev/cpuset/system-background/cpus
 	echo 4-7     > /dev/cpuset/foreground/boost/cpus
-	echo 0-2,4-7 > /dev/cpuset/foreground/cpus
+	echo 0-2,4-6 > /dev/cpuset/foreground/cpus
 	echo 0-7     > /dev/cpuset/top-app/cpus
 
 	# Turn off scheduler boost at the end
@@ -4807,7 +4807,7 @@ case "$target" in
 	# configure input boost settings
 	echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
-        echo "0:1785600 1:0 2:0 3:0 4:2419200 5:0 6:0 7:2956800" > /sys/module/cpu_boost/parameters/powerkey_input_boost_freq
+        echo "0:1785600 1:0 2:0 3:0 4:2419200 5:0 6:0 7:0" > /sys/module/cpu_boost/parameters/powerkey_input_boost_freq
         echo 400 > /sys/module/cpu_boost/parameters/powerkey_input_boost_ms
 
 	# Disable wsf, beacause we are using efk.
@@ -4873,6 +4873,19 @@ case "$target" in
 		echo 0 > /sys/devices/virtual/npu/msm_npu/pwr
 	    done
 	done
+
+        # disable GPU throttling
+        echo 0 > /sys/class/kgsl/kgsl-3d0/throttling
+
+        # tune schedtune
+        echo 5 > /dev/stune/schedtune.boost
+        echo 1 > /dev/stune/schedtune.sched_boost_no_override
+
+        echo 5 > /dev/stune/top-app/schedtune.boost
+        echo 1 > /dev/stune/top-app/schedtune.sched_boost_no_override
+
+        echo 4 > /dev/stune/foreground/schedtune.boost
+        echo 1 > /dev/stune/foreground/schedtune.sched_boost_no_override
 
     # memlat specific settings are moved to seperate file under
     # device/target specific folder
