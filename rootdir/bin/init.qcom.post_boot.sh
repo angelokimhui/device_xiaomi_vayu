@@ -4741,10 +4741,10 @@ case "$target" in
     "msmnile")
 	# Core control parameters for gold
 	echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
-	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
+	echo 70 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
 	echo 30 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
-	echo 3 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
+	echo 5 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
 
 	# Core control parameters for gold+
 	echo 0 > /sys/devices/system/cpu/cpu7/core_ctl/min_cpus
@@ -4794,7 +4794,7 @@ case "$target" in
 	# configure governor settings for gold cluster
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/up_rate_limit_us
-        echo 30000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
+        echo 40000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 1612800 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/pl
 
